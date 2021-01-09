@@ -1,6 +1,6 @@
 // BUILD PLOT function
 function drawHPlot(x_value, y_value, div, labels) {
-    var trace = {
+    let trace = {
       x: x_value,
       y: y_value,
       type: 'bar',
@@ -8,14 +8,40 @@ function drawHPlot(x_value, y_value, div, labels) {
       text: labels
     };
     
-    var data_plot = [trace];
+    let data_plot = [trace];
 
-    var layout = {
+    let layout = {
       title: "Top OTU counts"
     };
 
     Plotly.newPlot(div, data_plot, layout);
 };
+
+function drawBubble(x_value, y_value, div, labels) {
+  let trace = {
+    x: x_value,
+    y: y_value,
+    text: labels,
+    mode: 'markers',
+    marker: {
+      size: y_value,
+      color: x_value,
+      sizeref: .2,
+      sizemode: 'area'
+    }
+    // type: 'scatter'
+  }
+
+  let data_plot = [trace];
+
+  let layout = {
+    title: "Bubbles?"
+  };
+  // console.log("bubbles");
+
+  Plotly.newPlot(div, data_plot, layout);
+};
+
 
 
 // read in samples.json with d3
@@ -29,7 +55,7 @@ function drawHPlot(x_value, y_value, div, labels) {
 
 function optionChanged(id) {
 
-  d3.json('https://isabelle-sanford.github.io/plotly-challenge/plotly-challenge/data/samples.json').then(function(data) { // maybe change later
+  d3.json('https://isabelle-sanford.github.io/plotly-challenge/data/samples.json').then(function(data) { // maybe change later
 
     var name = data[0].names;
     var metadata = data[0].metadata;
@@ -57,10 +83,12 @@ function optionChanged(id) {
     // filter data to get only right name
     var currdata = sample.filter(s => s.id === id);
 
+
     var myOTUs = currdata[0]["otu_ids"];
     var myCounts = currdata[0]["sample_values"];
     var myLabels = currdata[0]["otu_labels"];
 
+    // console.log(myOTUs);
 
     var zipped = myOTUs.map(function(e, i) {
       return [e, myCounts[i], myLabels[i]];
@@ -80,7 +108,37 @@ function optionChanged(id) {
 
 
     drawHPlot(sortedCounts, sortedOTUs, "bar", sortedLabels);
+    drawBubble(myOTUs, myCounts, "bubble", myLabels);
+
+
+    // get dropdown location
+    var info = d3.select('#sample-metadata');
+
+    console.log(id);
+    x = 945;
+
+    console.log(id === x.toString());
+    
+    // filter data to get the right person
+    var myData = data[0].metadata.filter(n => n.id.toString() === id);
+
+    console.log(myData);
+
+    var vals = Object.values(myData);
+    console.log(vals);
+    
+    vals.forEach(v => {
+      console.log(v);
+
+      var myInfo = info.append("p");
+      myInfo.text(`ehh: ${v}`);
+    });
+
+
+    // class = panelbody
+    // id, ethnicity, gender, age, location, bbtype, wfreq
+
   });
 };
 
-optionChanged("940");
+optionChanged("945");
