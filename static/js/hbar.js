@@ -1,10 +1,11 @@
 // BUILD PLOT function
-function drawHPlot(x_value, y_value, div) {
+function drawHPlot(x_value, y_value, div, labels) {
     var trace = {
       x: x_value,
       y: y_value,
       type: 'bar',
-      orientation: 'h'
+      orientation: 'h',
+      text: labels
     };
     
     var data_plot = [trace];
@@ -53,24 +54,16 @@ function optionChanged(id) {
     }); 
 
 
-
-    // function myFunction() {
-    //   var x = document.getElementById("fname");
-    //   x.value = x.value.toUpperCase();
-    // }
-
-
- 
-
     // filter data to get only right name
     var currdata = sample.filter(s => s.id === id);
 
     var myOTUs = currdata[0]["otu_ids"];
     var myCounts = currdata[0]["sample_values"];
+    var myLabels = currdata[0]["otu_labels"];
 
 
     var zipped = myOTUs.map(function(e, i) {
-      return [e, myCounts[i]];
+      return [e, myCounts[i], myLabels[i]];
     });
 
     // sort by # of things and get top 10
@@ -78,17 +71,15 @@ function optionChanged(id) {
         b[1] - a[1];
     });
 
-    console.log(zipped);
-
     var slicedD = sortedD.slice(0,10);
     var reversedD = slicedD.reverse();
 
     var sortedOTUs = reversedD.map(t => "OTU"+t[0].toString());
     var sortedCounts = reversedD.map(t => t[1]);
+    var sortedLabels = reversedD.map(t => t[2]);
 
-    console.log(sortedOTUs);
 
-    drawHPlot(sortedCounts, sortedOTUs, "bar");
+    drawHPlot(sortedCounts, sortedOTUs, "bar", sortedLabels);
   });
 };
 
