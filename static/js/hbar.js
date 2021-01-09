@@ -43,23 +43,25 @@ d3.json('../samples.json').then(function(data) {
     var sample_values = unpack(data.samples, 2);
     var otu_labels = unpack(data.samples, 3);
 
+    var myID = 940;
+  // filter data to get only right name
+  var currdata = sample.filter(s => {
+          s.id === myID;
+      });
+
+
+  // sort by # of things and get top 10
+  var sortedD = currdata.sort((a,b) => {
+      b.sample_values - a.sample_values;
+  });
+
+  var slicedD = sortedD.slice(0,10);
+  var reversedD = slicedD.reverse();
+
+  drawHPlot(reversedD.otu_ids, reversedD.sample_values, "sample-metadata");
+
+
 });
 
 
-var myID = 940;
-// filter data to get only right name
-var currdata = sample.filter(s => {
-        s.id === myID;
-    });
-
-
-// sort by # of things and get top 10
-var sortedD = currdata.sort((a,b) => {
-    b.sample_values - a.sample_values;
-});
-
-var slicedD = sortedD.slice(0,10);
-var reversedD = slicedD.reverse();
-
-drawHPlot(reversedD.otu_ids, reversedD.sample_values, "sample-metadata");
 
