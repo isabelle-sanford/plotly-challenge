@@ -1,0 +1,20 @@
+samples.json
+    "names"
+        list of #s 
+    
+    "metadata"
+        list of dicts with keys:
+            "id"
+            "ethnicity"
+            "gender"
+            "age"
+            "location"
+            "bbtype"
+            "wfreq"
+
+    "samples"
+        list of dicts with keys:
+        "id"
+        "otu_ids"
+        "sample_values"
+        "otu_labels"
