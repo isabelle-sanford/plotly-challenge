@@ -18,3 +18,6 @@ samples.json
         "otu_ids"
         "sample_values"
         "otu_labels"
+
+color scheme
+extra credit / gauge

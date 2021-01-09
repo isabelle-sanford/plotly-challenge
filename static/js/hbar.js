@@ -113,25 +113,26 @@ function optionChanged(id) {
 
     // get dropdown location
     var info = d3.select('#sample-metadata');
+    d3.select("#sample-metadata").selectAll('p').remove();
 
-    console.log(id);
-    x = 945;
 
-    console.log(id === x.toString());
     
     // filter data to get the right person
-    var myData = data[0].metadata.filter(n => n.id.toString() === id);
+    var myData = data[0].metadata.filter(n => n.id === parseInt(id));
+
+
 
     console.log(myData);
 
-    var vals = Object.values(myData);
+    var vals = Object.values(myData[0]);
     console.log(vals);
     
-    vals.forEach(v => {
-      console.log(v);
+    things_list = ["ID", "Ethnicity", "Gender", "Age", "Location", "Bbtype", "Wfreq"]
+
+    vals.forEach((v, i) => {
 
       var myInfo = info.append("p");
-      myInfo.text(`ehh: ${v}`);
+      myInfo.text(`${things_list[i]}: ${v}`);
     });
 
 
@@ -141,4 +142,4 @@ function optionChanged(id) {
   });
 };
 
-optionChanged("945");
+optionChanged("940");
