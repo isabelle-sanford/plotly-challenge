@@ -25,6 +25,9 @@ function drawHPlot(x_value, y_value, div) {
 //     });
 // };
 
+
+
+
 d3.json('https://isabelle-sanford.github.io/plotly-challenge/plotly-challenge/data/samples.json').then(function(data) { // maybe change later
 
   var name = data[0].names;
@@ -43,38 +46,45 @@ d3.json('https://isabelle-sanford.github.io/plotly-challenge/plotly-challenge/da
   // var sample_values = unpack(data.samples, 2);
   // var otu_labels = unpack(data.samples, 3);
 
+  var nameDrop = d3.select("#selDataset");
+  name.forEach(n => {
+    var myName = nameDrop.append("option");
+    myName.text(n);
+  }); 
 
-  var myID = "940"; 
-  // filter data to get only right name
-  var currdata = sample.filter(s => s.id === myID);
+  function optionChanged(id) {
+    // filter data to get only right name
+    var currdata = sample.filter(s => s.id === id);
+  
+    var myOTUs = currdata[0]["otu_ids"];
+    var myCounts = currdata[0]["sample_values"];
+  
+  
+    var zipped = myOTUs.map(function(e, i) {
+      return [e, myCounts[i]];
+    });
+  
+    // sort by # of things and get top 10
+    var sortedD = zipped.sort((a,b) => {
+        b[1] - a[1];
+    });
+  
+    console.log(zipped);
+  
+    var slicedD = sortedD.slice(0,10);
+    var reversedD = slicedD.reverse();
+  
+    var sortedOTUs = reversedD.map(t => "OTU"+t[0].toString());
+    var sortedCounts = reversedD.map(t => t[1]);
+  
+    console.log(sortedOTUs);
+  
+    drawHPlot(sortedCounts, sortedOTUs, "bar");
+  }
 
-  // console.log(currdata[0]);
-
-  var myOTUs = currdata[0]["otu_ids"];
-  var myCounts = currdata[0]["sample_values"];
 
 
-  var zipped = myOTUs.map(function(e, i) {
-    return [e, myCounts[i]];
-  });
-
-  // sort by # of things and get top 10
-  var sortedD = zipped.sort((a,b) => {
-      b[1] - a[1];
-  });
-
-  console.log(zipped);
-
-  var slicedD = sortedD.slice(0,10);
-  var reversedD = slicedD.reverse();
-
-  var sortedOTUs = reversedD.map(t => "OTU"+t[0].toString());
-  var sortedCounts = reversedD.map(t => t[1]);
-
-  console.log(sortedOTUs);
-
-  drawHPlot(sortedCounts, sortedOTUs, "bar");
-
+  optionChanged("940");
 
 });
 
