@@ -53,17 +53,27 @@ d3.json('https://isabelle-sanford.github.io/plotly-challenge/plotly-challenge/da
   var myOTUs = currdata[0]["otu_ids"];
   var myCounts = currdata[0]["sample_values"];
 
-  // // sort by # of things and get top 10
-  // var sortedD = currdata.sort((a,b) => {
-  //     b.sample_values - a.sample_values;
-  // });
 
-  // console.log(sortedD)
+  var zipped = myOTUs.map(function(e, i) {
+    return [e, myCounts[i]];
+  });
 
-  // var slicedD = sortedD.slice(0,10);
-  // var reversedD = slicedD.reverse();
+  // sort by # of things and get top 10
+  var sortedD = zipped.sort((a,b) => {
+      b[1] - a[1];
+  });
 
-  drawHPlot(myCounts, myOTUs, "sample-metadata");
+  console.log(zipped);
+
+  var slicedD = sortedD.slice(0,10);
+  var reversedD = slicedD.reverse();
+
+  var sortedOTUs = reversedD.map(t => "OTU"+t[0].toString());
+  var sortedCounts = reversedD.map(t => t[1]);
+
+  console.log(sortedOTUs);
+
+  drawHPlot(sortedCounts, sortedOTUs, "bar");
 
 
 });
