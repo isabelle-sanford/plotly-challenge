@@ -25,7 +25,7 @@ function unpack(rows, index) {
     });
 };
 
-d3.json('../samples.json').then(function(data) {
+d3.json('../data/samples.json').then(function(data) {
 
     var name = data.names;
     var metadata = data.metadata;
