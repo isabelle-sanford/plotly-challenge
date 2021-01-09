@@ -25,25 +25,25 @@ function unpack(rows, index) {
     });
 };
 
-d3.json('https://isabelle-sanford.github.io/plotly-challenge/data/samples.json').then(function(data) { // maybe change later
+d3.json('plotly-challenge/data/samples.json').then(function(data) { // maybe change later
 
-    var name = data.names;
-    var metadata = data.metadata;
-    var sample = data.samples;
+  var name = data.names;
+  var metadata = data.metadata;
+  var sample = data.samples;
 
-    var id = unpack(data.metadata, 0);
-    var eth = unpack(data.metadata, 1);
-    var gender = unpack(data.metadata, 2);
-    var age = unpack(data.metadata, 3);
-    var loc = unpack(data.metadata, 4);
-    var bbtype = unpack(data.metadata, 5);
-    var wfreq = unpack(data.metadata, 6);
+  var id = unpack(data.metadata, 0);
+  var eth = unpack(data.metadata, 1);
+  var gender = unpack(data.metadata, 2);
+  var age = unpack(data.metadata, 3);
+  var loc = unpack(data.metadata, 4);
+  var bbtype = unpack(data.metadata, 5);
+  var wfreq = unpack(data.metadata, 6);
 
-    var otu_ids = unpack(data.samples, 1);
-    var sample_values = unpack(data.samples, 2);
-    var otu_labels = unpack(data.samples, 3);
+  var otu_ids = unpack(data.samples, 1);
+  var sample_values = unpack(data.samples, 2);
+  var otu_labels = unpack(data.samples, 3);
 
-    var myID = 940;
+  var myID = 940;
   // filter data to get only right name
   var currdata = sample.filter(s => {
           s.id === myID;
