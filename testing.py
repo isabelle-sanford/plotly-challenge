@@ -7,4 +7,4 @@ with open('data/samples.json') as s:
 
 
 
-print(samples[0].samples)
+print(samples[0]['samples'])

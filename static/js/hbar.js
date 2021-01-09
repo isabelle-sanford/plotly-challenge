@@ -25,11 +25,11 @@ function drawHPlot(x_value, y_value, div) {
 //     });
 // };
 
-d3.json('plotly-challenge/data/samples.json').then(function(data) { // maybe change later
+d3.json('https://isabelle-sanford.github.io/plotly-challenge/plotly-challenge/data/samples.json').then(function(data) { // maybe change later
 
-  var name = data.names;
-  var metadata = data.metadata;
-  var sample = data.samples;
+  var name = data[0].names;
+  var metadata = data[0].metadata;
+  var sample = data[0].samples;
 
   // var id = unpack(data.metadata, 0);
   // var eth = unpack(data.metadata, 1);
@@ -43,25 +43,27 @@ d3.json('plotly-challenge/data/samples.json').then(function(data) { // maybe cha
   // var sample_values = unpack(data.samples, 2);
   // var otu_labels = unpack(data.samples, 3);
 
-  console.log(sample);
-  console.log(data.samples);
 
-  var myID = 940;
+  var myID = "940"; 
   // filter data to get only right name
-  var currdata = sample.filter(s => {
-          s.id === myID;
-      });
+  var currdata = sample.filter(s => s.id === myID);
 
+  // console.log(currdata[0]);
 
-  // sort by # of things and get top 10
-  var sortedD = currdata.sort((a,b) => {
-      b.sample_values - a.sample_values;
-  });
+  var myOTUs = currdata[0]["otu_ids"];
+  var myCounts = currdata[0]["sample_values"];
 
-  var slicedD = sortedD.slice(0,10);
-  var reversedD = slicedD.reverse();
+  // // sort by # of things and get top 10
+  // var sortedD = currdata.sort((a,b) => {
+  //     b.sample_values - a.sample_values;
+  // });
 
-  drawHPlot(reversedD.otu_ids, reversedD.sample_values, "sample-metadata");
+  // console.log(sortedD)
+
+  // var slicedD = sortedD.slice(0,10);
+  // var reversedD = slicedD.reverse();
+
+  drawHPlot(myCounts, myOTUs, "sample-metadata");
 
 
 });
