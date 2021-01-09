@@ -25,7 +25,7 @@ function unpack(rows, index) {
     });
 };
 
-d3.json('../data/samples.json').then(function(data) {
+d3.json('https://isabelle-sanford.github.io/plotly-challenge/data/samples.json').then(function(data) { // maybe change later
 
     var name = data.names;
     var metadata = data.metadata;

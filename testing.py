@@ -2,9 +2,9 @@ import requests
 import json
 
 
-with open('StarterCode/samples.json') as s:
+with open('data/samples.json') as s:
   samples = json.load(s)
 
 
 
-print(samples['samples'][0])
+print(samples[0].samples)
