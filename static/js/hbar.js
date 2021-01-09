@@ -43,6 +43,9 @@ d3.json('plotly-challenge/data/samples.json').then(function(data) { // maybe cha
   // var sample_values = unpack(data.samples, 2);
   // var otu_labels = unpack(data.samples, 3);
 
+  console.log(sample);
+  console.log(data.samples);
+
   var myID = 940;
   // filter data to get only right name
   var currdata = sample.filter(s => {
