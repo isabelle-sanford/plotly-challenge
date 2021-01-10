@@ -52,6 +52,7 @@ function drawGauge(div, washing) {
     value: washing,
     type: "indicator",
     mode: "gauge+number",
+    number: {suffix: " scrubs/wk"},
 
     gauge: {
       axis: 
@@ -76,11 +77,13 @@ function drawGauge(div, washing) {
         {range: [7, 8],  color: 'limegreen' },
         {range: [8, 9],  color: 'seagreen' },
       ]
+
+      // borderwidth: 3
     }
   }];
 
   let layout = {
-    title: "Frequency of Washing (per week)"
+    title: "Belly Button Washing Frequency\n(Scrubs per Week)"
   };
 
   Plotly.newPlot(div, data, layout);
@@ -156,13 +159,12 @@ function optionChanged(id) {
     
     // pull out list of just metadata values
     var vals = Object.values(myData[0]);
+    var keys = Object.keys(myData[0])
 
-    labels_list = ["ID", "Ethnicity", "Gender", "Age", "Location", "Bbtype", "Wash frequency"]
-
-    // loop through values list and concat with specified labels
-    vals.forEach((v, i) => {
+    // loop through keys list and concat with associated value
+    keys.forEach((k, i) => {
       var myInfo = info.append("p");
-      myInfo.text(`${labels_list[i]}: ${v}`);
+      myInfo.text(`${k}: ${vals[i]}`);
     });
   });
 }
