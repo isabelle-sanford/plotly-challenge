@@ -110,6 +110,7 @@ function optionChanged(id) {
       var myName = nameDropdown.append("option");
       myName.text(n);
     }); 
+    nameDropdown.node().value = id;
 
     // PREP FOR BUBBLE & BAR
     // filter data to get the currently selected ID
