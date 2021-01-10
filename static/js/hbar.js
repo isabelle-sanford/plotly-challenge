@@ -26,6 +26,7 @@ function drawBubble(x_value, y_value, div, labels) {
     marker: {
       size: y_value,
       color: x_value,
+      colorscale: 'Jet',
       sizeref: .2,
       sizemode: 'area'
     }
