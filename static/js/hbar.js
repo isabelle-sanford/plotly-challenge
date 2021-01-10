@@ -1,24 +1,27 @@
-// BUILD PLOT function
+// --------PLOT FUNCTIONS---------------
+
+// horizontal bar chart
 function drawHPlot(x_value, y_value, div, labels) {
-    let trace = {
+    let data_plot = [{
       x: x_value,
       y: y_value,
       type: 'bar',
       orientation: 'h',
       text: labels
-    };
-    
-    let data_plot = [trace];
+    }];
 
     let layout = {
-      title: "Top OTU counts"
+      title: "Most Found OTUs",
+      xaxis: {title: "Number of instances of OTU"},
+      yaxis: {title: "OTU IDs"}
     };
 
     Plotly.newPlot(div, data_plot, layout);
 };
 
+// bubble plot
 function drawBubble(x_value, y_value, div, labels) {
-  let trace = {
+  let data_plot = [{
     x: x_value,
     y: y_value,
     text: labels,
@@ -27,11 +30,10 @@ function drawBubble(x_value, y_value, div, labels) {
       size: y_value,
       color: x_value,
       colorscale: 'Jet',
-      sizeref: .2,
+      sizeref: .1,
       sizemode: 'area'
     }
-    // type: 'scatter'
-  }
+  }];
 
   let data_plot = [trace];
 
@@ -42,6 +44,52 @@ function drawBubble(x_value, y_value, div, labels) {
 
   Plotly.newPlot(div, data_plot, layout);
 };
+
+function drawGauge(div, washing) {
+
+  let data = [
+    {
+      domain: { x: [0, 1], y: [0, 1] },
+      value: washing,
+      type: "indicator",
+      mode: "gauge+number",
+
+      gauge: {
+        axis: 
+        { range: [0, 9], 
+          tickwidth: 1,
+          dtick: 1,
+          tick0: 0
+        },
+
+ 
+        steps: [
+          {range: [0, 1],  color: 'tomato' },
+          {range: [1, 2],  color: 'coral' },
+          {range: [2, 3],  color: 'lightsalmon' },
+          {range: [3, 4],  color: 'blanchedalmond' },
+          {range: [4, 5],  color: 'white' },
+          {range: [5, 6],  color: 'greenyellow' },
+          {range: [6, 7],  color: 'lawngreen' },
+          {range: [7, 8],  color: 'limegreen' },
+          {range: [8, 9],  color: 'seagreen' },
+        ]
+
+      }
+    }
+  ];
+
+
+  let layout = {
+    title: "Avg washing"
+  };
+  
+  // var layout = { width: 600, height: 500, margin: { t: 0, b: 0 } };
+  Plotly.newPlot(div, data, layout);
+}
+
+
+
 
 
 
@@ -136,9 +184,10 @@ function optionChanged(id) {
       myInfo.text(`${things_list[i]}: ${v}`);
     });
 
-
     // class = panelbody
     // id, ethnicity, gender, age, location, bbtype, wfreq
+
+    drawGauge('gauge', myData[0].wfreq);
 
   });
 };
