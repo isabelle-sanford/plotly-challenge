@@ -35,161 +35,141 @@ function drawBubble(x_value, y_value, div, labels) {
     }
   }];
 
-  let data_plot = [trace];
-
   let layout = {
-    title: "Bubbles?"
+    title: "Counts of every OTU",
+    xaxis: {title: "OTU ID"},
+    yaxis: {title: "Count of OTU"}
   };
-  // console.log("bubbles");
 
   Plotly.newPlot(div, data_plot, layout);
 };
 
+// gauge plot
 function drawGauge(div, washing) {
 
-  let data = [
-    {
-      domain: { x: [0, 1], y: [0, 1] },
-      value: washing,
-      type: "indicator",
-      mode: "gauge+number",
+  let data = [{
+    domain: { x: [0, 1], y: [0, 1] },
+    value: washing,
+    type: "indicator",
+    mode: "gauge+number",
 
-      gauge: {
-        axis: 
-        { range: [0, 9], 
-          tickwidth: 1,
-          dtick: 1,
-          tick0: 0
-        },
+    gauge: {
+      axis: 
+      { range: [0, 9], 
+        tickwidth: 1,
+        dtick: 1,
+        tick0: 0
+      },
 
- 
-        steps: [
-          {range: [0, 1],  color: 'tomato' },
-          {range: [1, 2],  color: 'coral' },
-          {range: [2, 3],  color: 'lightsalmon' },
-          {range: [3, 4],  color: 'blanchedalmond' },
-          {range: [4, 5],  color: 'white' },
-          {range: [5, 6],  color: 'greenyellow' },
-          {range: [6, 7],  color: 'lawngreen' },
-          {range: [7, 8],  color: 'limegreen' },
-          {range: [8, 9],  color: 'seagreen' },
-        ]
+      bar: {
+        color: "blue"
+      },
 
-      }
+      steps: [
+        {range: [0, 1],  color: 'tomato' },
+        {range: [1, 2],  color: 'coral' },
+        {range: [2, 3],  color: 'lightsalmon' },
+        {range: [3, 4],  color: 'blanchedalmond' },
+        {range: [4, 5],  color: 'white' },
+        {range: [5, 6],  color: 'greenyellow' },
+        {range: [6, 7],  color: 'lawngreen' },
+        {range: [7, 8],  color: 'limegreen' },
+        {range: [8, 9],  color: 'seagreen' },
+      ]
     }
-  ];
-
+  }];
 
   let layout = {
-    title: "Avg washing"
+    title: "Frequency of Washing (per week)"
   };
-  
-  // var layout = { width: 600, height: 500, margin: { t: 0, b: 0 } };
+
   Plotly.newPlot(div, data, layout);
 }
 
 
-
-
-
+// -------------D3 WORK---------------
 
 // read in samples.json with d3
-// unpack function
-// function unpack(rows, index) {
-//     return rows.map(function(row) {
-//       return row[index];
-//     });
-// };
 
 
 function optionChanged(id) {
 
   d3.json('https://isabelle-sanford.github.io/plotly-challenge/data/samples.json').then(function(data) { // maybe change later
-
+    // load dicts
     var name = data[0].names;
     var metadata = data[0].metadata;
     var sample = data[0].samples;
 
-    // var id = unpack(data.metadata, 0);
-    // var eth = unpack(data.metadata, 1);
-    // var gender = unpack(data.metadata, 2);
-    // var age = unpack(data.metadata, 3);
-    // var loc = unpack(data.metadata, 4);
-    // var bbtype = unpack(data.metadata, 5);
-    // var wfreq = unpack(data.metadata, 6);
-
-    // var otu_ids = unpack(data.samples, 1);
-    // var sample_values = unpack(data.samples, 2);
-    // var otu_labels = unpack(data.samples, 3);
-
-    var nameDrop = d3.select("#selDataset");
+    // populate dropdown with names
+    var nameDropdown = d3.select("#selDataset");
+    d3.select("#selDataset").selectAll('option').remove();
     name.forEach(n => {
-      var myName = nameDrop.append("option");
+      var myName = nameDropdown.append("option");
       myName.text(n);
     }); 
 
-
-    // filter data to get only right name
+    // PREP FOR BUBBLE & BAR
+    // filter data to get the currently selected ID
     var currdata = sample.filter(s => s.id === id);
 
-
+    // pull lists out of sample data
     var myOTUs = currdata[0]["otu_ids"];
     var myCounts = currdata[0]["sample_values"];
     var myLabels = currdata[0]["otu_labels"];
 
-    // console.log(myOTUs);
+    // make bubble chart from above data
+    drawBubble(myOTUs, myCounts, "bubble", myLabels);
 
+
+    // PREP FOR BAR
+    // zip lists together
     var zipped = myOTUs.map(function(e, i) {
       return [e, myCounts[i], myLabels[i]];
     });
 
     // sort by # of things and get top 10
-    var sortedD = zipped.sort((a,b) => {
+    var sortedData = zipped.sort((a,b) => {
         b[1] - a[1];
     });
+    var slicedData = sortedData.slice(0,10);
+    var reversedData = slicedData.reverse();
 
-    var slicedD = sortedD.slice(0,10);
-    var reversedD = slicedD.reverse();
+    // get lists ready to go into plotly
+    var sortedOTUs = reversedData.map(t => "OTU "+t[0].toString());
+    var sortedCounts = reversedData.map(t => t[1]);
+    var sortedLabels = reversedData.map(t => t[2]);
 
-    var sortedOTUs = reversedD.map(t => "OTU"+t[0].toString());
-    var sortedCounts = reversedD.map(t => t[1]);
-    var sortedLabels = reversedD.map(t => t[2]);
-
-
+    // make hbar chart from sorted data
     drawHPlot(sortedCounts, sortedOTUs, "bar", sortedLabels);
-    drawBubble(myOTUs, myCounts, "bubble", myLabels);
 
-
-    // get dropdown location
+    // TABLE  INSERTION & GAUGE CHART
+    // get location & clear previous entries
     var info = d3.select('#sample-metadata');
     d3.select("#sample-metadata").selectAll('p').remove();
 
+    // filter metadata to get the right person
+    var myData = metadata.filter(n => n.id === parseInt(id));
 
-    
-    // filter data to get the right person
-    var myData = data[0].metadata.filter(n => n.id === parseInt(id));
-
-
-
-    console.log(myData);
-
-    var vals = Object.values(myData[0]);
-    console.log(vals);
-    
-    things_list = ["ID", "Ethnicity", "Gender", "Age", "Location", "Bbtype", "Wfreq"]
-
-    vals.forEach((v, i) => {
-
-      var myInfo = info.append("p");
-      myInfo.text(`${things_list[i]}: ${v}`);
-    });
-
-    // class = panelbody
-    // id, ethnicity, gender, age, location, bbtype, wfreq
-
+    // draw gauge chart using the wfreq variable (washing frequency per week)
     drawGauge('gauge', myData[0].wfreq);
 
+    
+    // pull out list of just metadata values
+    var vals = Object.values(myData[0]);
+
+    labels_list = ["ID", "Ethnicity", "Gender", "Age", "Location", "Bbtype", "Wash frequency"]
+
+    // loop through values list and concat with specified labels
+    vals.forEach((v, i) => {
+      var myInfo = info.append("p");
+      myInfo.text(`${labels_list[i]}: ${v}`);
+    });
   });
-};
+}
+
 
 optionChanged("940");
+
+
+
+
