@@ -52,7 +52,7 @@ function drawGauge(div, washing) {
     value: washing,
     type: "indicator",
     mode: "gauge+number",
-    number: {suffix: " scrubs/wk"},
+    // number: {suffix: " scrubs/wk"},
 
     gauge: {
       axis: 
